@@ -152,6 +152,8 @@ Item {
         id:                     _pipOverlay
         anchors.left:           parent.left
         anchors.bottom:         parent.bottom
+        //anchors.right:           parent.right  //shiwei 20230428 add
+        //anchors.top:             parent.top    //shiwei 20230428 add
         anchors.margins:        _toolsMargin
         item1IsFullSettingsKey: "MainFlyWindowIsMap"
         item1:                  mapControl
