@@ -135,11 +135,14 @@ QString VWorldSatMapProvider::_getURL(const int x, const int y, const int zoom, 
             .arg(_getServerNum(x, y, 4)).arg(key, _versionBingMaps, _language);
     }
 }
-
-
-QString GaodeSatMapProvider::_getURL(const int x, const int y, const int zoom, QNetworkAccessManager* networkManager) {
+QString TianDiTextSatMapProvider::_getURL(const int x, const int y, const int zoom, QNetworkAccessManager* networkManager) {
     Q_UNUSED(networkManager)
-
-    return QStringLiteral("http://webst01.is.autonavi.com/appmaptile?style=6&x=%1&y=%2&z=%3").arg(x).arg(y).arg(zoom);   //高德影像 OK
+    //鏈�鍚庣殑QStringLiteral鏄嚜宸辩敵璇风殑澶╁湴鍥剧綉椤电増瀵嗛挜
+    return QStringLiteral("http://t1.tianditu.gov.cn/cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=%1&TILEROW=%2&TILECOL=%3&tk=%4").arg(zoom).arg(y).arg(x).arg(QStringLiteral("85242ac3d2496f29760e7dd647ba8d00"));
 }
 
+QString TianDiImgSatMapProvider::_getURL(const int x, const int y, const int zoom, QNetworkAccessManager* networkManager) {
+    Q_UNUSED(networkManager)
+    return QStringLiteral("http://t1.tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=%1&TILEROW=%2&TILECOL=%3&tk=%4").arg(zoom).arg(y).arg(x).arg(QStringLiteral("85242ac3d2496f29760e7dd647ba8d00"));
+
+}

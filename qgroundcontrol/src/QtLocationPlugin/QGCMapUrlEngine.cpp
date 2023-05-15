@@ -48,6 +48,8 @@ UrlFactory::UrlFactory() : _timeout(5 * 1000) {
     _providersTable["Bing Road"]      = new BingRoadMapProvider(this);
     _providersTable["Bing Satellite"] = new BingSatelliteMapProvider(this);
     _providersTable["Bing Hybrid"]    = new BingHybridMapProvider(this);
+    _providersTable["TianDiTu Satellite Map"] = new TianDiImgSatMapProvider(this);
+    _providersTable["TianDiTu Text"] = new TianDiTextSatMapProvider(this);
 
     _providersTable["Statkart Topo"] = new StatkartMapProvider(this);
     _providersTable["Statkart Basemap"] = new StatkartBaseMapProvider(this);
@@ -86,8 +88,6 @@ UrlFactory::UrlFactory() : _timeout(5 * 1000) {
     _providersTable["LINZ Basemap"] = new LINZBasemapMapProvider(this);
     
     _providersTable["CustomURL Custom"] = new CustomURLMapProvider(this);
-
-    _providersTable["¸ßµÂ ÎÀÐÇµØÍ¼"] = new GaodeSatMapProvider(this);
 }
 
 void UrlFactory::registerProvider(QString name, MapProvider* provider) {

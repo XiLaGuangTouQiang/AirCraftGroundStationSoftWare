@@ -155,14 +155,27 @@ class VWorldSatMapProvider : public MapProvider {
   private:
     const QString _versionBingMaps = QStringLiteral("563");
 };
-
-class GaodeSatMapProvider : public MapProvider {
+//天地图注记图
+class TianDiTextSatMapProvider : public MapProvider {
     Q_OBJECT
 public:
-    GaodeSatMapProvider(QObject* parent = nullptr)
-        : MapProvider(QStringLiteral("webapi.amap.com"), QStringLiteral("jpg"),
+    TianDiTextSatMapProvider(QObject* parent = nullptr)
+        : MapProvider(QStringLiteral("www.tiandi.com"), QStringLiteral("jpg"),
                       AVERAGE_TILE_SIZE, QGeoMapType::SatelliteMapDay, parent) {}
 
+    QString _getURL(const int x, const int y, const int zoom, QNetworkAccessManager* networkManager) override;
+
+private:
+    const QString _versionBingMaps = QStringLiteral("563");
+};
+
+//天地图影像图
+class TianDiImgSatMapProvider : public MapProvider {
+    Q_OBJECT
+public:
+    TianDiImgSatMapProvider(QObject* parent = nullptr)
+        : MapProvider(QStringLiteral("www.tiandi.com"), QStringLiteral("jpg"),
+                      AVERAGE_TILE_SIZE, QGeoMapType::SatelliteMapDay, parent) {}
     QString _getURL(const int x, const int y, const int zoom, QNetworkAccessManager* networkManager) override;
 
 private:
