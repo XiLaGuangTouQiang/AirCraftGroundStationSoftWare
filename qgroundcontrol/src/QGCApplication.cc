@@ -147,8 +147,11 @@
     class MyWidget : public QWidget, private Ui::Form
 {
 public:
-    explicit MyWidget(QWidget *parent = nullptr) : QWidget(parent) { setupUi(this); }
-
+    explicit MyWidget(QWidget *parent = nullptr) : QWidget(parent)
+    {
+        setupUi(this);
+    }
+// 2023 5 4 zhangmin
     virtual ~MyWidget(){};
 };
 // clang-format on
@@ -598,11 +601,11 @@ bool QGCApplication::_initForNormalAppBoot()
         item->setupWidget(m_p);
     }
 
-    QObject *pfd_close = rootWindow->findChild<QObject *>("PFDClose");
+    /*QObject *pfd_close = rootWindow->findChild<QObject *>("PFDClose");
     if(pfd_close)
     {
         QObject::connect(pfd_close, SIGNAL(clicked()), item, SLOT(p_turn()));
-    }
+    }*/
 
     // Safe to show popup error messages now that main window is created
     UASMessageHandler* msgHandler = qgcApp()->toolbox()->uasMessageHandler();
