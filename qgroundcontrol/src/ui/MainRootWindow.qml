@@ -19,6 +19,7 @@ import QGroundControl.Controls      1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.FlightDisplay 1.0
 import QGroundControl.FlightMap     1.0
+import SLicense 1.0
 
 /// @brief Native QML top level window
 /// All properties defined here are visible to all QML pages.
@@ -141,17 +142,6 @@ ApplicationWindow {
         viewSwitch(toolbar.flyViewToolbar)
         flightView.visible = true
     }
-//20230418 shiwei add
-/*    function showPFDView() {
-        if (!container.visible) {
-            container.visible = true
-        }
-        else
-        {
-            container.visible = false
-        }
-    }
-    */
 
     function showPlanView() {
         viewSwitch(toolbar.planViewToolbar)
@@ -418,6 +408,7 @@ ApplicationWindow {
     FlyView {
         id:             flightView
         anchors.fill:   parent
+        visible: !s_license.licenseFlag
     }
 
     PlanView {
@@ -718,6 +709,34 @@ ApplicationWindow {
             onClosing: {
                 visible = false
                 source = ""
+            }
+        }
+    }
+
+    Rectangle {
+        width:640
+        height:480
+        visible: s_license.licenseFlag
+
+        SLicense{
+                id: s_license
+            }
+        Column{
+            //Layout.alignment:       Qt.AlignHCenter
+            Text {
+                text: "Put the software license file in the installation directory."
+                width: parent.width
+                wrapMode: Text.WordWrap
+            }
+            TextEdit {
+                font.pointSize: 25;
+                //focus:true
+                //anchors.horizontalCenter: parent.horizontalCenter
+                //anchors.centerIn: parent
+                //Layout.alignment:       Qt.AlignHCenter
+                Component.onCompleted: {
+                        text = s_license.title;
+                }
             }
         }
     }

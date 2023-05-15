@@ -16,6 +16,7 @@
  *
  */
 
+#include "SLicense.h"
 #include <QFile>
 #include <QRegularExpression>
 #include <QFontDatabase>
@@ -547,6 +548,8 @@ void QGCApplication::_initCommon()
 
     //  20230418 shiwei add
     qmlRegisterType<QQuickWidgetContainer>("QGroundControl.Controls", 1, 0, "WidgetContainer");
+    qmlRegisterType<SLicense>("SLicense", 1, 0, "SLicense");
+    //  20230515 shiwei add
 #ifndef __mobile__
 #ifndef NO_SERIAL_LINK
     qmlRegisterType<FirmwareUpgradeController>      (kQGCControllers,                       1, 0, "FirmwareUpgradeController");
