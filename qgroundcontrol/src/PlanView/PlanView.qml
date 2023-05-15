@@ -658,7 +658,7 @@ Item {
                         text:               qsTr("Center")
                         iconSource:         "/qmlimages/MapCenter.svg"
                         enabled:            true
-                        visible:            false
+                        visible:            true
                         dropPanelComponent: centerMapDropPanel
                     }
                 ]

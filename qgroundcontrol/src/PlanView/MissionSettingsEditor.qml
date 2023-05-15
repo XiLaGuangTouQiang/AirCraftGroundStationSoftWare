@@ -19,8 +19,8 @@ Rectangle {
     height:             valuesColumn.height + (_margin * 2)
     color:              qgcPal.windowShadeDark
     //zhangmin 2023 4 21
-    visible: false
-    //visible:            missionItem.isCurrentItem
+    //visible: false
+    visible:            missionItem.isCurrentItem
     radius:             _radius
 
     property var    _masterControler:               masterController
