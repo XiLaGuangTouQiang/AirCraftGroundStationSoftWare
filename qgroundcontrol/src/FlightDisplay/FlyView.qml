@@ -177,6 +177,38 @@ Item {
         //anchors.horizontalCenterOffset : 879
         //anchors.verticalCenterOffset :69
     }
+    Rectangle{
+        anchors.right: parent.right
+        anchors.top:parent.top
+        //anchors.left:           parent.left
+        //anchors.bottom:             parent.bottom
+        height:childrenRect.height
+        width:childrenRect.width
+        color:"black"
+        ColumnLayout{
+            QGCLabel{
+                text:"控制模式"
+                anchors.centerIn:parent.Center
+                Layout.alignment:   Qt.AlignCenter
+            }
+            RowLayout{
+
+                QGCRadioButton{
+                    id:rb1
+                    text:"人工"
+                }
+                QGCRadioButton{
+                    id:rb2
+                    text:"增稳"
+                }
+                QGCRadioButton{
+                    id:rb3
+                    text:"自主"
+                }
+            }
+        }
+
+    }
 
     Button{
            id:closePFD
@@ -185,7 +217,40 @@ Item {
            anchors.bottom:parent.bottom
            //y:800  //设置纵坐标
            text:"PFD"   //按钮标题
+           property bool   click:        false
+           onClicked:{
+               closePFD.click=!closePFD.click
+               if(closePFD.click === false)
+               {
+                   container.p_turnoff();
+               }
+               else
+               {
+                   container.p_turnon();
+               }
+           }
 
+           QGCCheckBox {
+                       id:             pfdcheckBox
+                       text:           ""
+                       //property int pfdColorFlag: 0;
+                       checked : false
+                       onCheckedChanged:      {
+                           if(pfdcheckBox.checked === false)
+                           {
+                               container.pfdNoColor();
+                               //pfdColorFlag = 1;
+                           }
+                           else
+                           {
+                               container.pfdHasColor();
+                               //pfdColorFlag = 0;
+                           }
+                       }
+                       anchors.right:   parent.right
+                       anchors.top:    parent.top
+                       //anchors.verticalCenter: parent.verticalCenter
+                       }
            objectName: "PFDClose";
            //icon.source: "qrc:/qmlimages/Gps.svg"
            //icon.color: "transparent"
@@ -224,436 +289,365 @@ Item {
     Component {
         id: fmcpPanel
         ColumnLayout {
-            spacing:    10
             RowLayout{
-                spacing:    180
-                QGCLabel {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("SPEED")
-                    visible:            true
-                }
-                QGCLabel {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("HDG/TRK")
-                    visible:            true
-                }
-                QGCLabel {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("ASEL")
-                    visible:            true
-                }
-                QGCLabel {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("VS/FPA")
-                    visible:            true
-                }
-            }
-
-            RowLayout {
-                QGCLabel {
-                    id:speed
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("IAS")
-                    visible:            true
-                }
-                QGCTextField {
-                    //anchors.centerIn:   parent
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    visible:            true
-                    text:               qsTr(Math.round(control.value).toString())
-
-                }
-                QGCLabel {
-                    id:hdg_trk
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("HDG")
-                    visible:            true
-                }
-                QGCTextField {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    visible:            true
-                    text:               qsTr(Math.round(control1.value).toString())
-                }
-                QGCTextField {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    visible:            true
-                    text:               qsTr(Math.round(control2.value).toString())
-                }
-                QGCLabel {
-                    id:fpa_vs
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    text:               qsTr("FPA")
-                    visible:            true
-                }
-                QGCTextField {
-                    Layout.alignment:   Qt.AlignCenter
-                    //Layout.fillWidth:   true
-                    visible:            true
-                    text:               qsTr(Math.round(control3.value).toString())
-                    }
-
-            }
-            RowLayout{
-                id:dial_col
-                //Layout.fillWidth:   true
-                //spacing:            50
-                visible:            true
-                Dial {
-                        id: control
-                        wrap:true
-                        width:0
-                        height:0
-                        from:-15
-                        to:15
-                        stepSize:1
-                        background: Rectangle {
-                            x: control.width / 2 - width / 2
-                            y: control.height / 2 - height / 2
-                            width: Math.max(25, Math.min(control.width, control.height))
-                            height: width
-                            color: "transparent"
-                            radius: width / 2
-                            border.color: control.pressed ? "white" : "gray"
-                            opacity: control.enabled ? 1 : 0.3
+                ColumnLayout{
+                    QGCLabel {
+                        Layout.alignment:   Qt.AlignCenter
+                        //Layout.fillWidth:   true
+                        text:               qsTr("SPEED")
+                        visible:            true
                         }
-
-                        handle: Rectangle {
-                            id: handleItem
-                            x: control.background.x + control.background.width / 2 - width / 2
-                            y: control.background.y + control.background.height / 2 - height / 2
-                            width: 16
-                            height: 16
-                            color: control.pressed ? "white" : "gray"
-                            radius: 8
-                            antialiasing: true
-                            opacity: control.enabled ? 1 : 0.3
-                            transform: [
-                                Translate {
-                                    y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
-                                },
-                                Rotation {
-                                    angle: control.angle
-                                    origin.x: handleItem.width / 2
-                                    origin.y: handleItem.height / 2
-                                }
-                            ]
+                    RowLayout{
+                        ColumnLayout{
+                            QGCLabel {
+                                Layout.alignment:   Qt.AlignCenter
+                                //Layout.fillWidth:   true
+                                text:               !switch2.checked ? qsTr("IAS"):qsTr("")
+                                visible:            true
+                                //scale:0.5
+                            }
+                            QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               switch2.checked ? qsTr("MACH"):qsTr("")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                            }
+                        QGCTextField {
+                            Layout.alignment:   Qt.AlignCenter
+                            //Layout.fillWidth:   true
+                            visible:            true
+                            text:               qsTr(Math.round(control1.value).toString())
                         }
                     }
-                Dial {
-                        id: control1
-                        width:0
-                        height:0
-                        wrap:true
-                        from:-15
-                        to:15
-                        stepSize:1
-                        background: Rectangle {
-                            x: control1.width / 2 - width / 2
-                            y: control1.height / 2 - height / 2
-                            width: Math.max(25, Math.min(control1.width, control1.height))
-                            height: width
-                            color: "transparent"
-                            radius: width / 2
-                            border.color: control1.pressed ? "white" : "gray"
-                            opacity: control1.enabled ? 1 : 0.3
+                }
+                ColumnLayout{
+                        QGCLabel {
+                            Layout.alignment:   Qt.AlignCenter
+                            //Layout.fillWidth:   true
+                            text:               qsTr("HDG/TRK")
+                            visible:            true
                         }
-
-                        handle: Rectangle {
-                            id: handleItem1
-                            x: control1.background.x + control1.background.width / 2 - width / 2
-                            y: control1.background.y + control1.background.height / 2 - height / 2
-                            width: 16
-                            height: 16
-                            color: control1.pressed ? "white" : "gray"
-                            radius: 8
-                            antialiasing: true
-                            opacity: control1.enabled ? 1 : 0.3
-                            transform: [
-                                Translate {
-                                    y: -Math.min(control1.background.width, control1.background.height) * 0.4 + handleItem1.height / 2
-                                },
-                                Rotation {
-                                    angle: control1.angle
-                                    origin.x: handleItem1.width / 2
-                                    origin.y: handleItem1.height / 2
-                                }
-                            ]
+                        RowLayout{
+                           ColumnLayout{
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               !switch4.checked ? qsTr("HDG"):qsTr("")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               switch4.checked ? qsTr("TRK"):qsTr("")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                            }
+                           QGCTextField {
+                               Layout.alignment:   Qt.AlignCenter
+                               //Layout.fillWidth:   true
+                               visible:            true
+                               text:               qsTr(Math.round(control1.value).toString())
+                           }
                         }
                     }
-                Dial {
-                        id: control2
-                        width:0
-                        height:0
-                        wrap:true
-                        from:-15
-                        to:15
-                        stepSize:1
-                        background: Rectangle {
-                            x: control2.width / 2 - width / 2
-                            y: control2.height / 2 - height / 2
-                            width: Math.max(25, Math.min(control2.width, control2.height))
-                            height: width
-                            color: "transparent"
-                            radius: width / 2
-                            border.color: control2.pressed ? "white" : "gray"
-                            opacity: control2.enabled ? 1 : 0.3
+                ColumnLayout{
+                        QGCLabel {
+                            Layout.alignment:   Qt.AlignCenter
+                            //Layout.fillWidth:   true
+                            text:               qsTr("ASEL")
+                            visible:            true
                         }
-
-                        handle: Rectangle {
-                            id: handleItem2
-                            x: control2.background.x + control2.background.width / 2 - width / 2
-                            y: control2.background.y + control2.background.height / 2 - height / 2
-                            width: 16
-                            height: 16
-                            color: control2.pressed ? "white" : "gray"
-                            radius: 8
-                            antialiasing: true
-                            opacity: control2.enabled ? 1 : 0.3
-                            transform: [
-                                Translate {
-                                    y: -Math.min(control2.background.width, control2.background.height) * 0.4 + handleItem2.height / 2
-                                },
-                                Rotation {
-                                    angle: control2.angle
-                                    origin.x: handleItem2.width / 2
-                                    origin.y: handleItem2.height / 2
-                                }
-                            ]
+                        RowLayout{
+                           ColumnLayout{
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               qsTr("   ")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               qsTr("   ")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                            }
+                           QGCTextField {
+                               Layout.alignment:   Qt.AlignCenter
+                               //Layout.fillWidth:   true
+                               visible:            true
+                               text:               qsTr(Math.round(control1.value).toString())
+                           }
                         }
                     }
-                Dial {
-                        id: control3
-                        width:0
-                        height:0
-                        wrap:true
-                        from:-15
-                        to:15
-                        stepSize:1
-                        background: Rectangle {
-                            x: control3.width / 2 - width / 2
-                            y: control3.height / 2 - height / 2
-                            width: Math.max(25, Math.min(control3.width, control3.height))
-                            height: width
-                            color: "transparent"
-                            radius: width / 2
-                            border.color: control3.pressed ? "white" : "gray"
-                            opacity: control3.enabled ? 1 : 0.3
+                ColumnLayout{
+                        QGCLabel {
+                            Layout.alignment:   Qt.AlignCenter
+                            //Layout.fillWidth:   true
+                            text:               qsTr("VS/FPA")
+                            visible:            true
                         }
+                        RowLayout{
+                           ColumnLayout{
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               !switch4.checked ? qsTr("VS"):qsTr("")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                               QGCLabel {
+                                   Layout.alignment:   Qt.AlignCenter
+                                   //Layout.fillWidth:   true
+                                   text:               switch4.checked ? qsTr("FPA"):qsTr("")
+                                   visible:            true
+                                   //scale:0.5
+                               }
+                            }
+                           QGCTextField {
+                               Layout.alignment:   Qt.AlignCenter
+                               //Layout.fillWidth:   true
+                               visible:            true
+                               text:               qsTr(Math.round(control1.value).toString())
+                           }
+                        }
+                        /*Dial {
+                            id: control
+                            width:16
+                            height:16
+                            scale:0.5
+                            background: Rectangle {
+                                x: control.width / 2 - width / 2
+                                y: control.height / 2 - height / 2
+                                width: Math.max(16, Math.min(control.width, control.height))
+                                height: width
+                                color: "transparent"
+                                radius: width / 2
+                                border.color: control.pressed ? "#17a81a" : "#21be2b"
+                                opacity: control.enabled ? 1 : 0.3
+                                //visible:false
+                            }
 
-                        handle: Rectangle {
-                            id: handleItem3
-                            x: control3.background.x + control3.background.width / 2 - width / 2
-                            y: control3.background.y + control3.background.height / 2 - height / 2
-                            width: 16
-                            height: 16
-                            color: control3.pressed ? "white" : "gray"
-                            radius: 8
-                            antialiasing: true
-                            opacity: control3.enabled ? 1 : 0.3
-                            transform: [
-                                Translate {
-                                    y: -Math.min(control3.background.width, control3.background.height) * 0.4 + handleItem3.height / 2
-                                },
-                                Rotation {
-                                    angle: control3.angle
-                                    origin.x: handleItem3.width / 2
-                                    origin.y: handleItem3.height / 2
-                                }
-                            ]
-                        }
+                            handle: Rectangle {
+                                id: handleItem
+                                x: control.background.x + control.background.width / 2 - width / 2
+                                y: control.background.y + control.background.height / 2 - height / 2
+                                width: 8
+                                height: 8
+                                color: control.pressed ? "#17a81a" : "#21be2b"
+                                radius: 4
+                                antialiasing: true
+                                opacity: control.enabled ? 1 : 0.3
+                                transform: [
+                                    Translate {
+                                        y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
+                                    },
+                                    Rotation {
+                                        angle: control.angle
+                                        origin.x: handleItem.width / 2
+                                        origin.y: handleItem.height / 2
+                                    }
+                                ]
+                            }
+                        }*/
                     }
             }
             RowLayout{
-                id:switch_col
-                Layout.fillWidth:   true
-                //spacing:            50
-                visible:            true
-                Switch{
-                        id : switch1
-                        Layout.fillWidth:   true
-                        //text: qsTr("spd_src")
-                        Text {
+                    ColumnLayout{
+                    id:switch_col
+                    spacing:            0
+                    visible:            true
+                    RowLayout{
+                        Switch{
+                                id : switch1
+                                onCheckedChanged: {
+                                    switchT1.text =switch1.checked ? qsTr("MAN") : qsTr("FMS")
+                                }
+                            }
+                        QGCLabel{
                             id :switchT1
-                            text: qsTr("MAN")
+                            Layout.alignment:   Qt.AlignCenter
+                            text: qsTr("FMS")
                             color:"white"
                         }
-                        onCheckedChanged: {
-                            switchT1.text = switch1.checked ? qsTr("FMS") : qsTr("MAN")
-                        }
                     }
-                Switch{
-                        id : switch2
-                        Layout.fillWidth:   true
-                        //text: qsTr("spd_typ")
-                        Text {
+                    RowLayout{
+                        Switch{
+                                id : switch2
+                                onCheckedChanged: {
+                                    switchT2.text = switch2.checked ? qsTr("MACH") : qsTr("IAS")
+                                }
+                            }
+                        QGCLabel{
                             id :switchT2
+                            Layout.alignment:   Qt.AlignCenter
                             text: qsTr("IAS")
                             color:"white"
                         }
-                        onCheckedChanged: {
-                            switchT2.text = switch2.checked ? qsTr("MACH") : qsTr("IAS")
-                            speed.text = switch2.checked ? qsTr("MACH") : qsTr("IAS")
-                        }
                     }
-                Switch{
-                        id : switch3
-                        Layout.fillWidth:   true
-                        //text: qsTr("asel_resolution")
-                        Text {
+                    /*RowLayout{
+                        Switch{
+                                id : switch3
+                                onCheckedChanged: {
+                                    switchT3.text = switch3.checked ? qsTr("1000") : qsTr("100")
+                                }
+                            }
+                        QGCLabel{
                             id :switchT3
+                            Layout.alignment:   Qt.AlignCenter
                             text: qsTr("100")
                             color:"white"
                         }
-                        onCheckedChanged: {
-                            switchT3.text = switch3.checked ? qsTr("1000") : qsTr("100")
-                        }
-                    }
-                Switch{
-                        id : switch4
-                        Layout.fillWidth:   true
-                        //text: qsTr("mode")
-                        Text {
+                    }*/
+                    RowLayout{
+                        Switch{
+                                id : switch4
+                                onCheckedChanged: {
+                                    switchT4.text = switch4.checked ? qsTr("TRK-FPA") : qsTr("HDG-VS")
+                                }
+                            }
+                        QGCLabel{
                             id :switchT4
+                            Layout.alignment:   Qt.AlignCenter
                             text: qsTr("HDG-VS")
                             color:"white"
                         }
-                        onCheckedChanged: {
-                            switchT4.text = switch4.checked ? qsTr("TRK-FPA") : qsTr("HDG-VS")
-                            hdg_trk.text = switch4.checked ? qsTr("TRK") : qsTr("HDG")
-                            fpa_vs.text = switch4.checked ? qsTr("FPA") : qsTr("VS")
+                    }
+
+                }
+                    GridLayout {
+                    id:second_last_col
+                    rows: 2 //行数
+                    columns: 6 //列数
+                    //spacing:            50
+                    visible:            true
+                    QGCButton {
+                       id:at
+                       text:               qsTr("A/THR")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:loc
+                       text:               qsTr("LOC")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:appr
+                       text:               qsTr("APPR")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                        id:lnav
+                        text:               qsTr("LNAV")
+                        Layout.fillWidth:   true
+                        enabled:            true
+                        visible:            true
+                        property bool   click:        false
+                        background:Rectangle{
+                            color:lnav.click?"#626270":"green"
                         }
+                        onClicked: {click=!click;
+                        }
+                   }
+                    QGCButton {
+                       id:ap
+                       text:               qsTr("AP")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+
+                        id:vnav
+                        text:               qsTr("VNAV")
+                        Layout.fillWidth:   true
+                        enabled:            true
+                        visible:            true
+                        property bool   click:        false
+                        background:Rectangle{
+                            color:vnav.click?"#626270":"green"
+                        }
+                        onClicked: {click=!click;
+                        }
+                   }
+                    QGCButton {
+                       id:fd_left
+                       text:               qsTr("FD")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:flch
+                       text:               qsTr("FLCH")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:hdg_trk_pb
+                       text:               qsTr("HDG/TRK")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:alt
+                       text:               qsTr("ALT")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:vs
+                       text:               qsTr("VS")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+                    QGCButton {
+                       id:fd_right
+                       text:               qsTr("FD")
+                       Layout.fillWidth:   true
+                       enabled:            true
+                       visible:            true
+                       onClicked: {
+                       }
+                   }
+
                 }
-            }
-            RowLayout {
-                id:second_last_col
-                Layout.fillWidth:   true
-                //spacing:            50
-                visible:            true
-                QGCButton {
-                    id:at
-                    text:               qsTr("A/THR")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
+
                 }
-                QGCButton {
-                    id:loc
-                    text:               qsTr("LOC")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:appr
-                    text:               qsTr("APPR")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:lnav
-                    text:               qsTr("LNAV")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:ap
-                    text:               qsTr("AP")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:vnav
-                    text:               qsTr("VNAV")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-            }
-            RowLayout {
-                id:last_col
-                Layout.fillWidth:   true
-                //spacing:            50
-                visible:            true
-                QGCButton {
-                    id:fd_left
-                    text:               qsTr("FD")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:flch
-                    text:               qsTr("FLCH")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:hdg_trk_pb
-                    text:               qsTr("HDG/TRK")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:alt
-                    text:               qsTr("ALT")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:vs
-                    text:               qsTr("VS")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-                QGCButton {
-                    id:fd_right
-                    text:               qsTr("FD")
-                    Layout.fillWidth:   true
-                    enabled:            true
-                    visible:            true
-                    onClicked: {
-                    }
-                }
-            }
         }
     }
 }

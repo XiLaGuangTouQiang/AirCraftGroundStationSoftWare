@@ -252,7 +252,6 @@ Item {
         z:                      QGroundControl.zOrderWidgets
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
         visible:                !QGroundControl.videoManager.fullScreen
-
         onDisplayPreFlightChecklist: preFlightChecklistPopup.createObject(mainWindow).open()
 
         property real leftInset: x + width

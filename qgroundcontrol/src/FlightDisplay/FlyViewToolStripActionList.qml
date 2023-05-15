@@ -26,6 +26,13 @@ ToolStripActionList {
 
     model: [
         ToolStripAction {
+            text:                   qsTr("FMCP")
+            enabled:                rb3.checked
+            visible:                true
+            iconSource:             "/qmlimages/Joystick.png"
+            dropPanelComponent:     fmcpPanel
+        },
+        ToolStripAction {
             text:           qsTr("航点规划")
             iconSource:     "/qmlimages/Plan.svg"
             onTriggered:    mainWindow.showPlanView()
@@ -46,13 +53,7 @@ ToolStripActionList {
         GuidedActionLand { },
         GuidedActionRTL { },
         GuidedActionPause { },
-        ToolStripAction {
-            text:                   qsTr("FMCP")
-            enabled:                true
-            visible:                true
-            iconSource:             "/qmlimages/Joystick.png"
-            dropPanelComponent:     fmcpPanel
-        },
+
         GuidedActionActionList { }
     ]
 

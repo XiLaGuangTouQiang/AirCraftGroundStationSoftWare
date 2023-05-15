@@ -36,11 +36,12 @@ Rectangle {
         deviceId:       QGroundControl.videoManager.uvcVideoSourceID
         captureMode:    Camera.CaptureViewfinder
         onDeviceIdChanged: {
-            adjustAspectRatio()
+            //adjustAspectRatio()
+            //zhang min 2023 5 5
         }
         onCameraStateChanged: {
             if(camera.cameraStatus === Camera.ActiveStatus) {
-                adjustAspectRatio()
+                //adjustAspectRatio()
             }
         }
     }
