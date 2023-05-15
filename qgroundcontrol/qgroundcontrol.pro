@@ -495,6 +495,7 @@ HEADERS += \
     src/QmlControls/CustomAction.h \
     src/QmlControls/CustomActionManager.h \
     src/QmlControls/QmlUnitsConversion.h \
+    src/SLicense.h \
     src/Vehicle/VehicleEscStatusFactGroup.h \
     src/api/QGCCorePlugin.h \
     src/api/QGCOptions.h \
@@ -692,6 +693,7 @@ SOURCES += \
     src/PFD/specific.c \
     src/PFD/target_configuration.c \
     src/QmlControls/CustomActionManager.cc \
+    src/SLicense.cpp \
     src/Vehicle/VehicleEscStatusFactGroup.cc \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
@@ -1821,3 +1823,17 @@ INCLUDEPATH += $$PWD/src/PFD/freeglut/include/GL
 DEPENDPATH += $$PWD/src/PFD/freeglut/include/GL
 LIBS += -L$$PWD/src/PFD/freeglut/lib/x64/ -lfreeglut
 LIBS += -lOpenGL32
+
+LIBS += -L'C:/Program Files/licensecc/licensecc/DEFAULT/' -llicensecc_static
+INCLUDEPATH += 'C:/Program Files/licensecc/include/'
+INCLUDEPATH += 'C:/Program Files/licensecc/include/licensecc/DEFAULT'
+
+LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lcrypto
+LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lcrypto
+INCLUDEPATH += C:/gstreamer/1.0/msvc_x86_64/include
+DEPENDPATH += C:/gstreamer/1.0/msvc_x86_64/include
+
+LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lssl
+LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lssl
+INCLUDEPATH += C:/gstreamer/1.0/msvc_x86_64/include
+DEPENDPATH += C:/gstreamer/1.0/msvc_x86_64/include
