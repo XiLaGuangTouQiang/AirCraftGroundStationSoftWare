@@ -101,6 +101,17 @@ Map {
         }
     }
 
+       function updateActiveMapTypeText(control,para) {
+           for (var i = 0; i < control.supportedMapTypes.length; i++) {
+               if (para === control.supportedMapTypes[i].name) {
+                   control.activeMapType = control.supportedMapTypes[i]
+                   return
+               }
+           }
+       }
+
+
+
     on_ActiveVehicleCoordinateChanged: _possiblyCenterToVehiclePosition()
 
     onMapReadyChanged: {
@@ -122,25 +133,58 @@ Map {
 
     /// Ground Station location
     MapQuickItem {
-        anchorPoint.x:  sourceItem.width / 2
-        anchorPoint.y:  sourceItem.height / 2
-        visible:        gcsPosition.isValid
-        coordinate:     gcsPosition
+       anchorPoint.x:  sourceItem.width / 2
+       anchorPoint.y:  sourceItem.height / 2
+       visible:        gcsPosition.isValid
+       coordinate:     gcsPosition
+       sourceItem: Image {
+           id:             mapItemImage
+           //source:         isNaN(gcsHeading) ? "/res/QGCLogoFull" : "/res/QGCLogoArrow"
 
-        sourceItem: Image {
-            id:             mapItemImage
-            //2023 4 21 zhangmin changed
-            //source:         isNaN(gcsHeading) ? "/res/QGCLogoFull" : "/res/QGCLogoArrow"
-            mipmap:         true
-            antialiasing:   true
-            fillMode:       Image.PreserveAspectFit
-            height:         ScreenTools.defaultFontPixelHeight * (isNaN(gcsHeading) ? 1.75 : 2.5 )
-            sourceSize.height: height
-            transform: Rotation {
-                origin.x:       mapItemImage.width  / 2
-                origin.y:       mapItemImage.height / 2
-                angle:          isNaN(gcsHeading) ? 0 : gcsHeading
-            }
-        }
-    }
+           mipmap:         true
+           antialiasing:   true
+           fillMode:       Image.PreserveAspectFit
+           height:         ScreenTools.defaultFontPixelHeight * (isNaN(gcsHeading) ? 1.75 : 2.5 )
+           sourceSize.height: height
+           transform: Rotation {
+               origin.x:       mapItemImage.width  / 2
+               origin.y:       mapItemImage.height / 2
+               angle:          isNaN(gcsHeading) ? 0 : gcsHeading
+           }
+       }
+   }
+   //叠加标注信息图层   默认始终添加标注图层，否则QGC在缺少或者无法加载地图时，发现容易出现崩溃
+   Map {
+       anchors.fill: parent
+       plugin: Plugin {
+           name: "QGroundControl"
+//            PluginParameter {
+//                name: "mapProvider"
+//                value: "tiandituImg"
+//            }
+//            PluginParameter {
+//                name: "format"
+//                value: "png"
+//            }
+       }
+       gesture.enabled: false
+       center: parent.center
+       color: 'transparent' // Necessary to make this map transparent
+       minimumFieldOfView: parent.minimumFieldOfView
+       maximumFieldOfView: parent.maximumFieldOfView
+       minimumTilt: parent.minimumTilt
+       maximumTilt: parent.maximumTilt
+       minimumZoomLevel: parent.minimumZoomLevel
+       maximumZoomLevel: parent.maximumZoomLevel
+       zoomLevel: parent.zoomLevel
+       tilt: parent.tilt;
+       bearing: parent.bearing
+       fieldOfView: parent.fieldOfView
+       z: parent.z + 1;
+
+       Component.onCompleted: {
+           updateActiveMapTypeText(this,"TianDiTu Text");
+       }
+   }
+
 } // Map
