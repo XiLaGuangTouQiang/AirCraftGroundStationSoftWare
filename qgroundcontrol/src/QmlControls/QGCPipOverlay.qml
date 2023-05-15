@@ -17,8 +17,10 @@ import QGroundControl.Palette       1.0
 
 Item {
     id:         _root
+    //width:      1045
+    //height:     645
     width:      _pipSize
-    height:     _pipSize * (9/16)
+    height:     _pipSize * (645/1045)
     z:          pipZOrder + 1
     visible:    item2 && item2.pipState !== item2.pipState.window && show
 
@@ -35,7 +37,10 @@ Item {
     property var    _pipOrWindowItem
     property alias  _windowContentItem: window.contentItem
     property bool   _isExpanded:        true
-    property real   _pipSize:           parent.width * 0.2
+    //property real   _pipSize:           parent.width * 0.2
+
+    property real   _pipSize:           1045
+    //zhangmin 2023 5 5
     property real   _maxSize:           0.75                // Percentage of parent control size
     property real   _minSize:           0.10
     property bool   _componentComplete: false
@@ -101,6 +106,13 @@ Item {
         }
     }
 
+    /*Rectangle{
+        color:"blue"
+        anchors.fill:   parent
+
+
+    }*/
+    //zhangmin 2023 5 5
     Window {
         id:         window
         visible:    false
