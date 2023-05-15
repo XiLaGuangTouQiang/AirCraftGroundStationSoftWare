@@ -166,7 +166,7 @@ ApplicationWindow {
         toolDrawer.visible      = true
     }
     //2023 4 21 zhangmin deleted
-    /*function showAnalyzeTool() {
+    function showAnalyzeTool() {
         showTool(qsTr("Analyze Tools"), "AnalyzeView.qml", "/qmlimages/Analyze.svg")
 
     }
@@ -174,12 +174,12 @@ ApplicationWindow {
     function showSetupTool() {
         showTool(qsTr("Vehicle Setup"), "SetupView.qml", "/qmlimages/Gears.svg")
 
-
+    }
     function showSettingsTool() {
         showTool(qsTr("Application Settings"), "AppSettings.qml", "/res/QGCLogoWhite")
 
     }
-    */
+
     //-------------------------------------------------------------------------
     //-- Global simple message dialog
 
