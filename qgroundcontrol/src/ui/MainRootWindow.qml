@@ -133,6 +133,8 @@ ApplicationWindow {
         flightView.visible      = false
         planView.visible        = false
         toolbar.currentToolbar  = currentToolbar
+        container.p_turnoff()   //20230523 shiwei add
+        closePFD.click = false  //20230523 shiwei add
     }
 
     function showFlyView() {
@@ -277,6 +279,8 @@ ApplicationWindow {
     function showToolSelectDialog() {
         if (!mainWindow.preventViewSwitch()) {
             toolSelectDialogComponent.createObject(mainWindow).open()
+            container.p_turnoff()   //20230523 shiwei add
+            closePFD.click = false  //20230523 shiwei add
         }
     }
 
@@ -713,31 +717,117 @@ ApplicationWindow {
         }
     }
 
-    Rectangle {
-        width:640
-        height:480
+    Item {
         visible: s_license.licenseFlag
 
         SLicense{
                 id: s_license
             }
-        Column{
-            //Layout.alignment:       Qt.AlignHCenter
-            Text {
-                text: "Put the software license file in the installation directory."
+        ColumnLayout{
+            Layout.fillWidth: true
+            Text{
+                //text: "Put the software license file in the installation directory."
+                Layout.alignment:       Qt.AlignHCenter
+                text:"硬件码:"
                 width: parent.width
                 wrapMode: Text.WordWrap
             }
             TextEdit {
+                selectByMouse: true
+                readOnly: true
                 font.pointSize: 25;
                 //focus:true
                 //anchors.horizontalCenter: parent.horizontalCenter
                 //anchors.centerIn: parent
-                //Layout.alignment:       Qt.AlignHCenter
+                Layout.alignment:       Qt.AlignHCenter
                 Component.onCompleted: {
                         text = s_license.title;
                 }
             }
         }
+    }
+
+    WidgetContainer {
+        id: container
+        objectName: "myWidget"
+        anchors.fill: parent
+        anchors.margins: 0
+        //anchors.margins:  120
+        //anchors.right:           parent.right
+        //anchors.top:           parent.top
+
+        //anchors.bottom:         parent.bottom
+        //anchors.right:      parent.right
+        //anchors.horizontalCenterOffset : 879
+        //anchors.verticalCenterOffset :69
+    }
+
+    Button{
+           id:closePFD
+           anchors.right: parent.right
+           //x:1500  //设置按钮的横坐标
+           anchors.bottom:parent.bottom
+           //y:800  //设置纵坐标
+           text:"PFD"   //按钮标题
+           property bool   click:        false
+           onClicked:{
+               closePFD.click=!closePFD.click
+               if(closePFD.click === false)
+               {
+                   container.p_turnoff();
+               }
+               else
+               {
+                   container.p_turnon();
+               }
+           }
+
+           CheckBox {
+                       id:             pfdcheckBox
+                       text:           ""
+                       //property int pfdColorFlag: 0;
+                       checked : false
+                       onCheckedChanged:      {
+                           if(pfdcheckBox.checked === false)
+                           {
+                               container.pfdNoColor();
+                               //pfdColorFlag = 1;
+                           }
+                           else
+                           {
+                               container.pfdHasColor();
+                               //pfdColorFlag = 0;
+                           }
+                       }
+                       anchors.right:   parent.right
+                       anchors.top:    parent.top
+                       //anchors.verticalCenter: parent.verticalCenter
+                       }
+           objectName: "PFDClose";
+           //icon.source: "qrc:/qmlimages/Gps.svg"
+           //icon.color: "transparent"
+           display: AbstractButton.TextUnderIcon
+           width: 100
+           height: 100
+           //Image{
+           //            anchors.fill: parent
+           //            source: "qrc:/qmlimages/Gps.svg"
+           //       }
+           contentItem: Text {
+                   text: closePFD.text
+                   font: closePFD.font
+                   color: "white"
+                   opacity: enabled ? 1.0 : 0.3
+                   horizontalAlignment: Text.AlignHCenter
+                   verticalAlignment: Text.AlignVCenter
+                   elide: Text.ElideRight
+               }
+
+           //设置按钮背景颜色
+                   background: Rectangle {
+                          color: Qt.rgba(0/255,0/255,0/255,1)
+                          }
+
+
     }
 }

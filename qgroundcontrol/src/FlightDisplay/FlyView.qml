@@ -165,18 +165,20 @@ Item {
     }
 
 
-    WidgetContainer {
-        id: container
-        objectName: "myWidget"
-        //anchors.fill: parent
-        //anchors.margins: 0
-        //anchors.margins:  120
-        //anchors.left:           parent.left
-        //anchors.bottom:         parent.bottom
-        //anchors.right:      parent.right
-        //anchors.horizontalCenterOffset : 879
-        //anchors.verticalCenterOffset :69
-    }
+//    WidgetContainer {
+//        id: container
+//        objectName: "myWidget"
+//        anchors.fill: parent
+//        anchors.margins: 0
+//        //anchors.margins:  120
+//        //anchors.right:           parent.right
+//        //anchors.top:           parent.top
+
+//        //anchors.bottom:         parent.bottom
+//        //anchors.right:      parent.right
+//        //anchors.horizontalCenterOffset : 879
+//        //anchors.verticalCenterOffset :69
+//    }
     Rectangle{
         anchors.right: parent.right
         anchors.top:parent.top
@@ -210,82 +212,75 @@ Item {
 
     }
 
-    Button{
-           id:closePFD
-           anchors.right: parent.right
-           //x:1500  //设置按钮的横坐标
-           anchors.bottom:parent.bottom
-           //y:800  //设置纵坐标
-           text:"PFD"   //按钮标题
-           property bool   click:        false
-           onClicked:{
-               closePFD.click=!closePFD.click
-               if(closePFD.click === false)
-               {
-                   container.p_turnoff();
-               }
-               else
-               {
-                   container.p_turnon();
-               }
-           }
+//    Button{
+//           id:closePFD
+//           anchors.right: parent.right
+//           //x:1500  //设置按钮的横坐标
+//           anchors.bottom:parent.bottom
+//           //y:800  //设置纵坐标
+//           text:"PFD"   //按钮标题
+//           property bool   click:        false
+//           onClicked:{
+//               closePFD.click=!closePFD.click
+//               if(closePFD.click === false)
+//               {
+//                   container.p_turnoff();
+//               }
+//               else
+//               {
+//                   container.p_turnon();
+//               }
+//           }
 
-           QGCCheckBox {
-                       id:             pfdcheckBox
-                       text:           ""
-                       //property int pfdColorFlag: 0;
-                       checked : false
-                       onCheckedChanged:      {
-                           if(pfdcheckBox.checked === false)
-                           {
-                               container.pfdNoColor();
-                               //pfdColorFlag = 1;
-                           }
-                           else
-                           {
-                               container.pfdHasColor();
-                               //pfdColorFlag = 0;
-                           }
-                       }
-                       anchors.right:   parent.right
-                       anchors.top:    parent.top
-                       //anchors.verticalCenter: parent.verticalCenter
-                       }
-           objectName: "PFDClose";
-           //icon.source: "qrc:/qmlimages/Gps.svg"
-           //icon.color: "transparent"
-           display: AbstractButton.TextUnderIcon
-           width: 100
-           height: 100
-           //Image{
-           //            anchors.fill: parent
-           //            source: "qrc:/qmlimages/Gps.svg"
-           //       }
-           contentItem: Text {
-                   text: closePFD.text
-                   font: closePFD.font
-                   color: "white"
-                   opacity: enabled ? 1.0 : 0.3
-                   horizontalAlignment: Text.AlignHCenter
-                   verticalAlignment: Text.AlignVCenter
-                   elide: Text.ElideRight
-               }
+//           QGCCheckBox {
+//                       id:             pfdcheckBox
+//                       text:           ""
+//                       //property int pfdColorFlag: 0;
+//                       checked : false
+//                       onCheckedChanged:      {
+//                           if(pfdcheckBox.checked === false)
+//                           {
+//                               container.pfdNoColor();
+//                               //pfdColorFlag = 1;
+//                           }
+//                           else
+//                           {
+//                               container.pfdHasColor();
+//                               //pfdColorFlag = 0;
+//                           }
+//                       }
+//                       anchors.right:   parent.right
+//                       anchors.top:    parent.top
+//                       //anchors.verticalCenter: parent.verticalCenter
+//                       }
+//           objectName: "PFDClose";
+//           //icon.source: "qrc:/qmlimages/Gps.svg"
+//           //icon.color: "transparent"
+//           display: AbstractButton.TextUnderIcon
+//           width: 100
+//           height: 100
+//           //Image{
+//           //            anchors.fill: parent
+//           //            source: "qrc:/qmlimages/Gps.svg"
+//           //       }
+//           contentItem: Text {
+//                   text: closePFD.text
+//                   font: closePFD.font
+//                   color: "white"
+//                   opacity: enabled ? 1.0 : 0.3
+//                   horizontalAlignment: Text.AlignHCenter
+//                   verticalAlignment: Text.AlignVCenter
+//                   elide: Text.ElideRight
+//               }
 
-           //设置按钮背景颜色
-                   background: Rectangle {
-                          color: Qt.rgba(0/255,0/255,0/255,1)
-                          }
+//           //设置按钮背景颜色
+//                   background: Rectangle {
+//                          color: Qt.rgba(0/255,0/255,0/255,1)
+//                          }
 
-       }
 
- /*   Component{
-        id:syncDropPanelPFD
-        WidgetContainer {
-            id: container
-            objectName: "myWidget"
-        }
-    }
-    */
+//       }
+
     Component {
         id: fmcpPanel
         ColumnLayout {

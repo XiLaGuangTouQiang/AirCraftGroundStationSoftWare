@@ -27,15 +27,15 @@ public:
     explicit QQuickWidgetContainer(QQuickItem *parent = nullptr);
     ~QQuickWidgetContainer();
     void setupWidget(QWidget *widget);
-    //QGraphicsOpacityEffect* opacityEffect;
 
   private:
     QWidget *renderer = nullptr;
     QWidget *contentItem = nullptr;
     uint32_t t_flag;
-
+    //QGraphicsOpacityEffect *opacityEffect;
 public slots :
-    void p_turn();
+    void p_turnon();
+    void p_turnoff();
     void pfdHasColor();
     void pfdNoColor();
     //void p_hide();

@@ -482,7 +482,6 @@ HEADERS += \
     src/PFD/Pages/macro_libmathext64.h \
     src/PFD/Pages/sdy_events.h \
     src/PFD/Pages/sgl_types.h \
-    src/PFD/Pages/target_configuration.h \
     src/PFD/Pages/user_macros.h \
     src/PFD/freeglut/include/GL/freeglut.h \
     src/PFD/freeglut/include/GL/freeglut_ext.h \
@@ -686,7 +685,6 @@ SOURCES += \
     src/PFD/Logics/interactivity_mapping.c \
     src/PFD/Logics/kcg_consts.c \
     src/PFD/Logics/kcg_types.c \
-    src/PFD/Logics/target_configuration.c \
     src/PFD/pfd_layer.cpp \
     src/PFD/sgl_font_table.c \
     src/PFD/sgl_font_table1.c \
