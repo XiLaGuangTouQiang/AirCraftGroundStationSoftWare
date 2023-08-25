@@ -23,6 +23,11 @@
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceFlightPlanProvider.h"
 #endif
+//#include <windows.h>
+#include <shellapi.h>
+#ifdef _DEBUG
+#pragma comment  (lib, "shell32.lib")
+#endif
 
 #include <QDomDocument>
 #include <QJsonDocument>
@@ -494,6 +499,8 @@ void PlanMasterController::saveToFile(const QString& filename)
     if (offline()) {
         setDirty(false);
     }
+
+    _callimpload(planFilename);
 }
 
 void PlanMasterController::saveToKml(const QString& filename)
@@ -616,6 +623,81 @@ void PlanMasterController::_showPlanFromManagerVehicle(void)
         if (!_geoFenceController.showPlanFromManagerVehicle()) {
             _rallyPointController.showPlanFromManagerVehicle();
         }
+    }
+}
+
+void PlanMasterController::_callimpload(const QString& filename)
+{
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    wchar_t wBuffer_4[1024] = {0};
+
+    QString currentFilename = QCoreApplication::applicationDirPath();
+    currentFilename += "/impload.exe";
+    currentFilename.replace("/","\\\\");
+    QStringList sections = filename.split(QRegExp("[/]"));
+    sections.removeLast();
+    QString desFileName = sections.join("\\");
+    QString copyCmd = "/c COPY " + currentFilename + " " + desFileName;
+    //copyCmd.replace("/","\\\\");
+    std::wstring wlpstrCopy = copyCmd.toStdWString();
+    wmemcpy_s(wBuffer_4, sizeof(wBuffer_4), wlpstrCopy.c_str(), wlpstrCopy.size());
+    LPWSTR lpwCopy = wBuffer_4;
+
+    wchar_t wBuffer[20] = {0};
+    std::wstring wStr = _T("cmd.exe");
+    wmemcpy_s(wBuffer, sizeof(wBuffer), wStr.c_str(), wStr.size());
+    LPWSTR lpw = wBuffer;
+
+    HINSTANCE hNewExeCopy = ShellExecuteW(NULL, NULL, lpw, lpwCopy, NULL, SW_HIDE);
+    if ((DWORD64)hNewExeCopy <= 32)
+    {
+        qDebug("return value:%llu\n", (DWORD64)hNewExeCopy);
+        qDebug("GetLastError: %d\n", GetLastError());
+    }
+    else
+    {
+        qDebug("successed!\n");
+    }
+
+    QString impFilename = filename;
+    QString replaceString = impFilename.right(5);
+    impFilename.replace(replaceString,".mission");
+
+    memset(wBuffer_4,0,sizeof(wBuffer_4));
+    QString strCovert ="/c impload.exe convert " +  filename + " "+ impFilename;
+    std::wstring wlpstrCovert = strCovert.toStdWString();
+    wmemcpy_s(wBuffer_4, sizeof(wBuffer_4), wlpstrCovert.c_str(), wlpstrCovert.size());
+    LPWSTR lpwConvert = wBuffer_4;
+
+    HINSTANCE hNewExeConvert = ShellExecuteW(NULL, NULL, lpw, lpwConvert, NULL, SW_HIDE);
+    if ((DWORD64)hNewExeConvert <= 32)
+    {
+        qDebug("return value:%llu\n", (DWORD64)hNewExeConvert);
+        qDebug("GetLastError: %d\n", GetLastError());
+    }
+    else
+    {
+        qDebug("successed!\n");
+    }
+
+    memset(wBuffer_4,0,sizeof(wBuffer_4));
+    QString strStore ="/c impload.exe store "+ impFilename;
+    wlpstrCovert = strStore.toStdWString();
+    wmemcpy_s(wBuffer_4, 496, wlpstrCovert.c_str(), wlpstrCovert.size());
+    LPWSTR lpw_store = wBuffer_4;
+
+    HINSTANCE hNewExeStore = ShellExecuteW(NULL, NULL, lpw, lpw_store, NULL, SW_HIDE);
+    if ((DWORD64)hNewExeStore <= 32)
+    {
+        qDebug("return value:%llu\n", (DWORD64)hNewExeStore);
+        qDebug("GetLastError: %d\n", GetLastError());
+    }
+    else
+    {
+        qDebug("successed!\n");
     }
 }
 

@@ -1822,16 +1822,25 @@ DEPENDPATH += $$PWD/src/PFD/freeglut/include/GL
 LIBS += -L$$PWD/src/PFD/freeglut/lib/x64/ -lfreeglut
 LIBS += -lOpenGL32
 
+#LIBS += -L'C:/Program Files/licensecc/licensecc/DEFAULT/' -llicensecc_static
+#INCLUDEPATH += 'C:/Program Files/licensecc/include/'
+#INCLUDEPATH += 'C:/Program Files/licensecc/include/licensecc/DEFAULT'
+
+CONFIG(debug, debug|release) {
+#LIBS += -L'C:/Program Files/licensecc/licensecc/DEFAULT/debug/' -llicensecc_static
+INCLUDEPATH += 'C:/Program Files/licensecc/include/'
+INCLUDEPATH += 'C:/Program Files/licensecc/include/licensecc/DEFAULT'
+} else {
 LIBS += -L'C:/Program Files/licensecc/licensecc/DEFAULT/' -llicensecc_static
 INCLUDEPATH += 'C:/Program Files/licensecc/include/'
 INCLUDEPATH += 'C:/Program Files/licensecc/include/licensecc/DEFAULT'
+}
 
-LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lcrypto
-LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lcrypto
-INCLUDEPATH += C:/gstreamer/1.0/msvc_x86_64/include
-DEPENDPATH += C:/gstreamer/1.0/msvc_x86_64/include
+LIBS += -L'C:/gstreamer/1.0/msvc_x86_64/lib/' -lcrypto
+INCLUDEPATH += 'C:/gstreamer/1.0/msvc_x86_64/include'
+DEPENDPATH += 'C:/gstreamer/1.0/msvc_x86_64/include'
 
-LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lssl
-LIBS += -LC:/gstreamer/1.0/msvc_x86_64/lib/ -lssl
-INCLUDEPATH += C:/gstreamer/1.0/msvc_x86_64/include
-DEPENDPATH += C:/gstreamer/1.0/msvc_x86_64/include
+LIBS += -L'C:/gstreamer/1.0/msvc_x86_64/lib/' -lssl
+INCLUDEPATH += 'C:/gstreamer/1.0/msvc_x86_64/include'
+DEPENDPATH += 'C:/gstreamer/1.0/msvc_x86_64/include'
+

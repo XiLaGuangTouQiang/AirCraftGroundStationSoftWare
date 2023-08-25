@@ -2,6 +2,7 @@
 
 SLicense::SLicense() : QObject()
 {
+#ifndef _DEBUG
     map<LCC_EVENT_TYPE, string> stringByEventType;
     stringByEventType[LICENSE_OK] = "OK ";
     stringByEventType[LICENSE_FILE_NOT_FOUND] = "license file not found ";
@@ -19,17 +20,24 @@ SLicense::SLicense() : QObject()
     char pc_identifier[LCC_API_PC_IDENTIFIER_SIZE + 1];
 
     LCC_EVENT_TYPE result = acquire_license(nullptr, nullptr, &licenseInfo);
-
+#else
+    LCC_EVENT_TYPE result = LICENSE_OK;
+#endif
     if (result == LICENSE_OK) {
         cout << "license OK" << endl;
         m_licenseFlag = false;
+        //memset(&m_title,0,sizeof(m_title));
+#ifndef _DEBUG
         if (!licenseInfo.linked_to_pc) {
             cout << "No hardware signature in license file. This is a 'demo' license that works on every pc." << endl
                  << "To generate a 'single pc' license call 'issue license' with option -s " << endl
                  << "and the hardware identifier obtained before." << endl
                  << endl;
         }
+#endif
     }
+
+#ifndef _DEBUG
     if (result != LICENSE_OK) {
         cout << "license ERROR :" << endl;
         m_licenseFlag = true;
@@ -43,6 +51,7 @@ SLicense::SLicense() : QObject()
             cerr << "errors in identify_pc" << endl;
         }
     }
+#endif
 }
 
 SLicense::~SLicense(){}
