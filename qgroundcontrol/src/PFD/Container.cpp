@@ -31,6 +31,7 @@ void QQuickWidgetContainer::RenderW::paintEvent(QPaintEvent *)
     const auto position = mapFromParent(pos());
     const auto rx= position.x();
     const auto ry= position.y();
+    _parent->setFocus(false);
     //const auto &[rx, ry] = std::tuple(position.x(), position.y());
     painter.drawImage(rx, ry, _parent->window()->grabWindow(), x(), y(), width() - rx, height() - ry);
     painter.end();
