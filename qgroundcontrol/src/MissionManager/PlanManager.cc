@@ -527,7 +527,27 @@ void PlanManager::_handleMissionRequest(const mavlink_message_t& message)
     if (!weakLink.expired()) {
         mavlink_message_t       messageOut;
         SharedLinkInterfacePtr  sharedLink = weakLink.lock();
-
+#ifdef INAV
+        mavlink_msg_mission_item_pack_chan(qgcApp()->toolbox()->mavlinkProtocol()->getSystemId(),
+                                               qgcApp()->toolbox()->mavlinkProtocol()->getComponentId(),
+                                               sharedLink->mavlinkChannel(),
+                                               &messageOut,
+                                               _vehicle->id(),
+                                               MAV_COMP_ID_AUTOPILOT1,
+                                               missionRequestSeq,
+                                               item->frame(),
+                                               16,
+                                               missionRequestSeq == 0,
+                                               item->autoContinue(),
+                                               item->param1(),
+                                               item->param2(),
+                                               item->param3(),
+                                               item->param4(),
+                                               item->param5(),
+                                               item->param6(),
+                                               item->param7(),
+                                               _planType);
+#else
         mavlink_msg_mission_item_int_pack_chan(qgcApp()->toolbox()->mavlinkProtocol()->getSystemId(),
                                                qgcApp()->toolbox()->mavlinkProtocol()->getComponentId(),
                                                sharedLink->mavlinkChannel(),
@@ -547,6 +567,7 @@ void PlanManager::_handleMissionRequest(const mavlink_message_t& message)
                                                item->frame() == MAV_FRAME_MISSION ? item->param6() : item->param6() * 1e7,
                                                item->param7(),
                                                _planType);
+#endif
         _vehicle->sendMessageOnLinkThreadSafe(sharedLink.get(), messageOut);
     }
     _startAckTimeout(AckMissionRequest);

@@ -36,6 +36,8 @@
 #include "OpalLink.h"
 #endif
 
+#define INAV
+
 // Work around circular header includes
 class QQmlApplicationEngine;
 class QGCSingleton;

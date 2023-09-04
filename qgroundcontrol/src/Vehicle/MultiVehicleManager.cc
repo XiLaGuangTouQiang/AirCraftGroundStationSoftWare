@@ -87,7 +87,9 @@ void MultiVehicleManager::_vehicleHeartbeatInfo(LinkInterface* link, int vehicle
                                               << componentId
                                               << vehicleFirmwareType
                                               << vehicleType;
-            return;
+#ifndef INAV
+            return;    //shiwei 20230823
+#endif
         }
     }
 

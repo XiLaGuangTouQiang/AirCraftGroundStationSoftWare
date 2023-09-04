@@ -687,6 +687,11 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     case MAVLINK_MSG_ID_RC_CHANNELS:
         _handleRCChannels(message);
         break;
+#ifdef INAV
+    case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
+        _handleRCChannels(message);
+        break;
+#endif
     case MAVLINK_MSG_ID_BATTERY_STATUS:
         _handleBatteryStatus(message);
         break;
@@ -1142,6 +1147,37 @@ void Vehicle::_handleGpsRawInt(mavlink_message_t& message)
             }
         }
     }
+
+#ifdef INAV
+    static uint32_t flyingCount = 0;
+    static uint32_t noFlyingCount = 0;
+    if(gpsRawInt.vel >= 100)
+    {
+        flyingCount ++;
+        if(flyingCount > 4)
+        {
+            _setFlying(true);
+        }
+    }
+    else
+    {
+        flyingCount = 0;
+    }
+
+    if(gpsRawInt.vel < 10)
+    {
+        noFlyingCount++;
+        if(noFlyingCount > 4)
+        {
+            _setFlying(false);
+        }
+    }
+    else
+    {
+        noFlyingCount = 0;
+    }
+
+#endif
 }
 
 void Vehicle::_handleGlobalPositionInt(mavlink_message_t& message)
@@ -1826,6 +1862,7 @@ void Vehicle::_handleRadioStatus(mavlink_message_t& message)
 
 void Vehicle::_handleRCChannels(mavlink_message_t& message)
 {
+#ifndef INAV
     mavlink_rc_channels_t channels;
 
     mavlink_msg_rc_channels_decode(&message, &channels);
@@ -1864,6 +1901,37 @@ void Vehicle::_handleRCChannels(mavlink_message_t& message)
 
     emit remoteControlRSSIChanged(channels.rssi);
     emit rcChannelsChanged(channels.chancount, pwmValues);
+#else
+    mavlink_rc_channels_raw_t channels;
+
+    mavlink_msg_rc_channels_raw_decode(&message, &channels);
+
+    uint16_t* _rgChannelvalues[8] = {
+        &channels.chan1_raw,
+        &channels.chan2_raw,
+        &channels.chan3_raw,
+        &channels.chan4_raw,
+        &channels.chan5_raw,
+        &channels.chan6_raw,
+        &channels.chan7_raw,
+        &channels.chan8_raw,
+    };
+    int pwmValues[cMaxRcChannels] = {0};
+
+    for (int i=0; i< 8; i++) {
+        uint16_t channelValue = *_rgChannelvalues[i];
+
+        if (i < 8) {
+            pwmValues[i] = channelValue == UINT16_MAX ? -1 : channelValue;
+        } else {
+            pwmValues[i] = -1;
+        }
+    }
+
+    channels.rssi = channels.rssi * 100 / 254;
+    emit remoteControlRSSIChanged(channels.rssi);
+    emit rcChannelsChanged(8, pwmValues);
+#endif
 }
 
 // Pop warnings ignoring for mavlink headers for both GCC/Clang and MSVC
