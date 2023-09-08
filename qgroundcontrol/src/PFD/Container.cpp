@@ -7,6 +7,7 @@
 #include <iostream>
 #include <tuple>
 #include "specific.h"
+#include "QGCApplication.h"
 
 using namespace std::chrono_literals;
 QGraphicsOpacityEffect *opacityEffect;
@@ -129,6 +130,32 @@ slots void QQuickWidgetContainer::p_show()
     renderer->setFixedSize(this->width(), this->height());
 }
 #endif
+void QQuickWidgetContainer::connectSet()
+{
+    static int pfdConnectFlag = 0;
+    static int pfdDisconnectFlag = 0;
+    Vehicle* vehicle = qgcApp()->toolbox()->multiVehicleManager()->activeVehicle();
+    if(vehicle)
+    {
+        if(pfdConnectFlag ==0)
+        {
+            connect(vehicle, &Vehicle::PFDGpsRawchanged,        this, &QQuickWidgetContainer::pfdGpsRawSet);
+            connect(vehicle, &Vehicle::PFDattitudechanged,        this, &QQuickWidgetContainer::pfdAttitudeSet);
+            pfdConnectFlag = 1;
+        }
+        pfdDisconnectFlag = 0;
+    }
+    else {
+        if(0 == pfdDisconnectFlag)
+        {
+            disconnect(vehicle, &Vehicle::PFDGpsRawchanged,        this, &QQuickWidgetContainer::pfdGpsRawSet);
+            disconnect(vehicle, &Vehicle::PFDattitudechanged,        this, &QQuickWidgetContainer::pfdAttitudeSet);
+            pfdDisconnectFlag = 1;
+        }
+        pfdConnectFlag = 0;
+    }
+}
+
 slots void QQuickWidgetContainer::pfdHasColor()
 {
     CTX_PFD_Controller.inputs_ctx.IO_Input.ipBkg_Land_vis_Status= 1;
@@ -139,6 +166,7 @@ slots void QQuickWidgetContainer::pfdHasColor()
     opacityEffect->setOpacity(1.0);
     CTX_PFD_Controller.inputs_ctx.IO_Input.ipBkg_Land_Opacity = 170;
     CTX_PFD_Controller.inputs_ctx.IO_Input.ipBkg_Sky_Opacity = 170;
+    connectSet();
 }
 
 slots void QQuickWidgetContainer::pfdNoColor()
@@ -151,6 +179,38 @@ slots void QQuickWidgetContainer::pfdNoColor()
     opacityEffect->setOpacity(0.8);
     CTX_PFD_Controller.inputs_ctx.IO_Input.ipBkg_Land_Opacity = 0;
     CTX_PFD_Controller.inputs_ctx.IO_Input.ipBkg_Sky_Opacity = 0;
+    connectSet();
+}
+
+void QQuickWidgetContainer::pfdAttitudeSet(mavlink_attitude_t PFDattitude)
+{
+    double roll, pitch, yaw;
+    roll = QGC::limitAngleToPMPIf(PFDattitude.roll);
+    pitch = QGC::limitAngleToPMPIf(PFDattitude.pitch);
+    yaw = QGC::limitAngleToPMPIf(PFDattitude.yaw);
+
+    roll = qRadiansToDegrees(roll);
+    pitch = qRadiansToDegrees(pitch);
+    yaw = qRadiansToDegrees(yaw);
+
+    if (yaw < 0.0) {
+        yaw += 360.0;
+    }
+    // truncate to integer so widget never displays 360
+    yaw = trunc(yaw);
+
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipRollAngle = roll;
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipPitchAngle = pitch;
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipMagneticHeading = yaw;
+}
+
+void QQuickWidgetContainer::pfdGpsRawSet(mavlink_vfr_hud_t PFDgpsRawInt)
+{
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipCalibratedAirspeed = PFDgpsRawInt.groundspeed;
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipPressureAltitude= PFDgpsRawInt.alt;
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipBaroCorrectedAltitude = PFDgpsRawInt.alt;
+    CTX_PFD_Controller.inputs_ctx.IO_Input.ipInertialVerticalSpeed = PFDgpsRawInt.climb;
+    //sprintf(CTX_PFD_Controller.inputs_ctx.IO_Input.ipVerSPD_Source_Text,"%f",PFDgpsRawInt.alt); //高度数据来源显示
 }
 
 

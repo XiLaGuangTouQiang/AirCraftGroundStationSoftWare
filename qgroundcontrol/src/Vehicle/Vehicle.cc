@@ -56,6 +56,8 @@
 #endif
 #include "Autotune.h"
 #include "RemoteIDManager.h"
+#include <stdio.h>
+#include <string.h>
 
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceVehicleManager.h"
@@ -1017,6 +1019,11 @@ void Vehicle::_handleVfrHud(mavlink_message_t& message)
         _altitudeTuningOffset = vfrHud.alt;
     }
     _altitudeTuningFact.setRawValue(vfrHud.alt - _altitudeTuningOffset);
+
+    //shiwei
+    memcpy(&_PFDgpsRawInt,&vfrHud,sizeof(vfrHud));
+    emit PFDGpsRawchanged(_PFDgpsRawInt);
+    //shiwei
 }
 
 void Vehicle::_handleRangefinder(mavlink_message_t& message)
@@ -1093,6 +1100,11 @@ void Vehicle::_handleAttitude(mavlink_message_t& message)
     mavlink_msg_attitude_decode(&message, &attitude);
 
     _handleAttitudeWorker(attitude.roll, attitude.pitch, attitude.yaw);
+
+    //shiwei
+    memcpy(&_PFDattitude,&attitude,sizeof(attitude));
+    emit PFDattitudechanged(_PFDattitude);
+    //shiwei
 }
 
 void Vehicle::_handleAttitudeQuaternion(mavlink_message_t& message)

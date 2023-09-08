@@ -984,6 +984,11 @@ signals:
 
     void sensorsParametersResetAck      (bool success);
 
+//shiwei
+    void PFDGpsRawchanged               (mavlink_vfr_hud_t PFDgpsRawInt);
+    void PFDattitudechanged             (mavlink_attitude_t attitude);
+//shiwei
+
 private slots:
     void _mavlinkMessageReceived            (LinkInterface* link, mavlink_message_t message);
     void _sendMessageMultipleNext           ();
@@ -1099,6 +1104,10 @@ private:
     UAS* _uas = nullptr;
 
     QGeoCoordinate  _coordinate;
+//shiwei
+    mavlink_vfr_hud_t _PFDgpsRawInt;
+    mavlink_attitude_t _PFDattitude;
+//shiwei
     QGeoCoordinate  _homePosition;
     QGeoCoordinate  _armedPosition;
 
