@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -97,6 +97,48 @@ QString FirmwarePlugin::flightMode(uint8_t base_mode, uint32_t custom_mode) cons
         flightMode = "PreFlight";
     } else if (base_mode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
         flightMode = QString("Custom:0x%1").arg(custom_mode, 0, 16);
+#ifdef INAV
+        typedef enum
+        {
+          PLANE_MODE_MANUAL=0,
+          PLANE_MODE_CIRCLE=1,
+          PLANE_MODE_STABILIZE=2,
+          PLANE_MODE_TRAINING=3,
+          PLANE_MODE_ACRO=4,
+          PLANE_MODE_FLY_BY_WIRE_A=5,
+          PLANE_MODE_FLY_BY_WIRE_B=6,
+          PLANE_MODE_CRUISE=7,
+          PLANE_MODE_AUTOTUNE=8,
+          PLANE_MODE_AUTO=10,
+          PLANE_MODE_RTL=11,
+          PLANE_MODE_LOITER=12,
+          PLANE_MODE_TAKEOFF=13,
+          PLANE_MODE_AVOID_ADSB=14,
+          PLANE_MODE_GUIDED=15,
+          PLANE_MODE_INITIALIZING=16,
+          PLANE_MODE_QSTABILIZE=17,
+          PLANE_MODE_QHOVER=18,
+          PLANE_MODE_QLOITER=19,
+          PLANE_MODE_QLAND=20,
+          PLANE_MODE_QRTL=21,
+          PLANE_MODE_QAUTOTUNE=22,
+          PLANE_MODE_ENUM_END=23,
+        }custom_mode_value;
+        switch(custom_mode)
+        {
+            case PLANE_MODE_MANUAL :flightMode = QString("MANUAL:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_STABILIZE :flightMode = QString("HORIZON:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_ACRO :flightMode = QString("ACRO:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_FLY_BY_WIRE_A :flightMode = QString("ANGLE:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_FLY_BY_WIRE_B :flightMode = QString("ALTITUDE_HOLD:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_CRUISE :flightMode = QString("CRUISE:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_AUTO :flightMode = QString("MISSION:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_RTL :flightMode = QString("RTH:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_LOITER :flightMode = QString("POSITION_HOLD:0x%1").arg(custom_mode, 0, 16);break;
+            case PLANE_MODE_TAKEOFF :flightMode = QString("LAUNCH:0x%1").arg(custom_mode, 0, 16);break;
+            default:flightMode = QString("Custom:0x%1").arg(custom_mode, 0, 16);
+        }
+#endif
     } else {
         for (size_t i=0; i<sizeof(rgBit2Name)/sizeof(rgBit2Name[0]); i++) {
             if (base_mode & rgBit2Name[i].baseModeBit) {
