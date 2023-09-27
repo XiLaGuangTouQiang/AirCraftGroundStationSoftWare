@@ -49,7 +49,8 @@ PX4FirmwarePlugin::PX4FirmwarePlugin()
     , _preclandFlightMode   (tr("Precision Land"))
     , _rtgsFlightMode       (tr("Return to Groundstation"))
     , _followMeFlightMode   (tr("Follow Me"))
-    , _simpleFlightMode     (tr("Simple"))
+    //, _simpleFlightMode     (tr("Simple"))  //20230925 shiwei add
+    , _simpleFlightMode     (tr("LNAV"))   //20230925 shiwei add
     , _orbitFlightMode      (tr("Orbit"))
 {
     qmlRegisterType<PX4SimpleFlightModesController>     ("QGroundControl.Controllers", 1, 0, "PX4SimpleFlightModesController");
@@ -73,7 +74,8 @@ PX4FirmwarePlugin::PX4FirmwarePlugin()
         { PX4_CUSTOM_MAIN_MODE_RATTITUDE,   0,                                      true,   true,   true },
         { PX4_CUSTOM_MAIN_MODE_ALTCTL,      0,                                      true,   true,   true },
         { PX4_CUSTOM_MAIN_MODE_OFFBOARD,    0,                                      true,   false,  true },
-        { PX4_CUSTOM_MAIN_MODE_SIMPLE,      0,                                      false,  false,  true },
+    //  { PX4_CUSTOM_MAIN_MODE_SIMPLE,      0,                                      false,  false,  true },   //20230935 shiwei add
+        { PX4_CUSTOM_MAIN_MODE_SIMPLE,      0,                                      true,  true,  false },  //20230935 shiwei add
         { PX4_CUSTOM_MAIN_MODE_POSCTL,      PX4_CUSTOM_SUB_MODE_POSCTL_POSCTL,      true,   true,   true },
         { PX4_CUSTOM_MAIN_MODE_POSCTL,      PX4_CUSTOM_SUB_MODE_POSCTL_ORBIT,       false,  false,   false },
         { PX4_CUSTOM_MAIN_MODE_AUTO,        PX4_CUSTOM_SUB_MODE_AUTO_LOITER,        true,   true,   true },

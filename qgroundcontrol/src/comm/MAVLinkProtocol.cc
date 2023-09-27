@@ -22,7 +22,6 @@
 
 #include "MAVLinkProtocol.h"
 #include "UASInterface.h"
-#include "UASInterface.h"
 #include "UAS.h"
 #include "LinkManager.h"
 #include "QGCMAVLink.h"

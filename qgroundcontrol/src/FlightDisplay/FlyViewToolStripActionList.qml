@@ -56,43 +56,5 @@ ToolStripActionList {
 
         GuidedActionActionList { }
     ]
-
-/*
-    Component {
-        id: syncDropPanelPFD
-
-        ColumnLayout {
-            id:         columnHolder
-            spacing:    _margin
-
-            WidgetContainer {
-                id: container
-                objectName: "myWidget"
-                anchors.fill: parent
-                //anchors.margins: 0
-                anchors.margins:  _toolsMargin
-                anchors.left:           parent.left
-                anchors.bottom:         parent.bottom
-            }
-
-        }
-
-    }
-    */
 }
 
-/*
-WidgetContainer {
-    id: container
-    objectName: "myWidget"
-    anchors.fill: parent
-    anchors.margins: 50
-}
-*/
-
-/*
-Component {
-    id: syncDropPanelPFD
-
-}
-*/

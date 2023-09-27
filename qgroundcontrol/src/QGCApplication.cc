@@ -150,9 +150,9 @@
 public:
     explicit MyWidget(QWidget *parent = nullptr) : QWidget(parent)
     {
-        setupUi(this);
+       setupUi(this);
     }
-// 2023 5 4 zhangmin
+
     virtual ~MyWidget(){};
 };
 // clang-format on
